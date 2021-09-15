@@ -1,19 +1,18 @@
 import requests
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 
 import pandas as pd
 
 #instancia o meu app no servidor
 app = Flask(__name__)
 
-
-@app.route('/ibge/<cep>')
-def retornaIBGE(cep):
-    url = "https://viacep.com.br/ws/"+cep+"/json/"
+@app.route('/ibge/', methods = ['POST'])
+def getCEP():
+   #cep = request.args.get("cep")
+    cep = request.form.get("cep")
+    url = "https://viacep.com.br/ws/" + cep + "/json/"
     dados = requests.get(url)
-    dataset = pd.DataFrame(dados.json(), index=[0])
-    return dataset.logradouro[0]
-
+    return dados.json()
 
 @app.route('/')
 def index():
